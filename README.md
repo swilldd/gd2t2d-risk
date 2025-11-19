@@ -13,7 +13,7 @@ This problem was explored by Prashanthan and Prashanthan (2025) in a study where
 - Recall - 0.88
 - F1 score - 0.80
 
-This project will aim to replicate this performance or better, whilst minising Type II errors (false negatives) which would lead to support not being directed to mothers that need it the most.
+This project will aim to replicate this performance or better, whilst minimising Type II errors (false negatives) which would lead to support not being directed to mothers that need it the most.
 
 ## Dataset
 
