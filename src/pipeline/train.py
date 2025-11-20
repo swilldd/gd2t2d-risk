@@ -97,7 +97,7 @@ def save_model(pipeline: sklearn.pipeline.Pipeline):
     """
     logging.info(f"Saving Model...")
 
-    output_file_name = f'./models/dv_rf_pipeline.bin'
+    output_file_name = f'./src/models/dv_rf_pipeline.bin'
 
     with open(output_file_name, 'wb') as f_out:
         pickle.dump(pipeline, f_out)
