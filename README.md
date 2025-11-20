@@ -1,3 +1,4 @@
+![FastAPI docs for this project](./assets/Fastapidocs.png)
 # Gestational Diabetes to Type 2 Diabetes Risk Prediction
 
 ## Problem Overview
