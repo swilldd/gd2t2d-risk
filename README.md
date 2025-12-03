@@ -15,7 +15,7 @@ Original study paper: [Predicting the future risk of developing type 2 diabetes 
 ### Project Approach
 
 To summarise the steps taken in this project:
-- EDA:  to explore the dataset, the feature and class distribution and discover feature importance
+- EDA: Explore the dataset, the feature and class distribution and discover feature importance
 - Model building and finetuning: Testing Decision Trees, Random Forest and XGBoost models to see which model performed well while minimising Type II errors
 - Selecting the best model based on evaluation metrics and use case
 - Serialisng the model using pickle to be later deployed
@@ -130,4 +130,20 @@ This was acheived with the final model acheiving the following metrics:
 ![Results of Random Forest Model Applied to test data](./assets/final_rf_test_performance.png)
 
 More detail can be found [here](./notebooks/02_model_building.ipynb).
+
+## Future Feature Enhancements
+
+*Testing other explainable ML models*
+The original paper found AdaBoost to be the best model, which I have yet to test due to time constraints. In the future I would like to test this model and compare with my best model at present. 
+
+*Visualise feature importances*
+Whilst at some level feature importances were explored, giving the importance of the the model decision explaiability, it would be beneficial to visualise these importances.
+
+*Streamlit Dashboard Development*
+For real life application, a dashboard that allows the user to take the following actions would need to be implemented:
+- Complete a form to indicate the features for new patients
+- Create new predicitions based on the content of the form
+- Show the preidiction and next steps required.
+- Visualise the features that contributed most to the individual prediction
+
 
