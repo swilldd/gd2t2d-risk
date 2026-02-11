@@ -7,6 +7,16 @@ from src.schemas.models import Patient, PredictResponse
 
 app = FastAPI(title="GDM2T2DPredict")
 
+@app.get("/")
+def home():
+    return {"message": "GD2T2D Risk Predicition Service"}
+
+
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
+
+
 @app.post("/predict", response_model=PredictResponse)
 def predict(patient: Patient) -> PredictResponse:
     t2dm_prob = predict_single(patient.model_dump())
