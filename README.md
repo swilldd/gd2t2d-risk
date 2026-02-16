@@ -1,3 +1,4 @@
+![GD2T2D app image](./assets/risk-app.png)
 
 # Gestational Diabetes to Type 2 Diabetes Risk Prediction App
 ## Problem Overview
@@ -28,12 +29,13 @@ To understand how this project is organised, please find a breakdown of how this
 
 ## Running this project
 
-This project provides a machine-learning prediction service for estimating the risk of progression from Gestational Diabetes Mellitus (GDM) to Type 2 Diabetes Mellitus (T2DM).
+This project provides a machine-learning prediction app for estimating the risk of progression from Gestational Diabetes Mellitus (GDM) to Type 2 Diabetes Mellitus (T2DM).
 It includes:
 
 - A training pipeline (offline model building)
 - A FastAPI inference service (real-time predictions)
 - A fully containerized deployment using Docker
+- Streamlit Frontend application to make new predictions
 
 > *Prerequisites*
 > Please ensure you have UV installed. 
@@ -43,7 +45,7 @@ It includes:
 
 As this endpoint has been deployed using Render, you can visit the following url to test the endpoint:
 
-https://gdm2t2d.onrender.com/docs
+https://gd2t2d-risk.onrender.com/
 
 As this is a free deployment resource, it will take time for the service to load (around 1min).
 
@@ -54,8 +56,8 @@ Alternatively you can run the service using docker on your PC. This will require
 1. Clone the repository
 
 ```bash
-git clone https://github.com/ShaniceWilliams/GDM2T2D.git
-cd GDM2T2D
+git clone https://github.com/swilldd/gd2t2d-risk.git
+cd gd2t2d-risk
 ```
 
 2. Set up local environment
@@ -64,46 +66,15 @@ Run the following command in your terminal
 uv sync
 ```
 
-3. Build the docker image
+3. Build the multi-container docker image
 Run the following command to build the docker image:
 ```bash
-docker build -t gdm2t2d-predict .
+docker-compose up --build -d
 ```
 
-4. Run the docker image
-Then you can run the image using the following command.
-```bash
-docker run -it --rm -p 9696:9696 gdm2t2d-predict
-```
-
-Now you can access the service by following the link: http://0.0.0.0:9696/docs
+Now you can access the service by following the link: http://localhost:8501
 
 
-### Local inference (Non Docker)
-
-1. Clone the repository
-
-```bash
-git clone https://github.com/ShaniceWilliams/GDM2T2D.git
-cd GDM2T2D
-```
-
-2. Set up local environment
-Run the following command to create virtual environment and install dependencies
-```bash
-uv sync
-```
-3. Run training pipeline
-Run the following command in your terminal
-```bash
-python -m src.pipeline.train
-```
-4. Make predictions
-
-Run the following command in your terminal
-```bash
-python -m src.pipeline.predict
-```
 
 
 ## Deployed Model Summary
@@ -138,11 +109,9 @@ The original paper found AdaBoost to be the best model, which I have yet to test
 *Visualise feature importances*
 Whilst at some level feature importances were explored, giving the importance of the the model decision explaiability, it would be beneficial to visualise these importances.
 
-*Streamlit Dashboard Development*
+*Continued Streamlit Dashboard Development*
 For real life application, a dashboard that allows the user to take the following actions would need to be implemented:
-- Complete a form to indicate the features for new patients
-- Create new predicitions based on the content of the form
-- Show the preidiction and next steps required.
 - Visualise the features that contributed most to the individual prediction
+- Show relevant KPIs
 
 
