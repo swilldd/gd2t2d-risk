@@ -6,19 +6,6 @@ import os
 # Get API URL from environment variable, fallback to localhost for development
 API_URL = os.getenv('API_URL', 'http://localhost:9696')
 
-# import requests
-
-# url = 'http://localhost:9696/predict'
-
-
-
-# if t2dm_risk_prediction['t2dm_risk']:
-#     print('Patient at high risk of T2DM, inform primary care physician and Health Vistor.')
-# else:
-#     print('Patient at low risk of T2DM, no action required.')
-
-
-
 
 # TODO [X]: Create function for input form for predictions
 
@@ -26,7 +13,9 @@ def patient_history_form():
     """
     Function to generate form for collecting patient history to make predictions.
 
-    Returns st.form container
+    Return:
+        - patient_history (dict) if form submitted
+        - None if no form submitted
     """
     with st.form("prediction-input"):
         st.write("Please enter your patient history below:")
@@ -99,9 +88,8 @@ def patient_history_form():
 
         return None
 
-# TODO: Create function to make predictions
 
-
+# TODO [X]: Create function to make predictions
 
 def make_predicition(patient_history):
 
@@ -207,20 +195,35 @@ def main():
 
     st.write("App summary. Outline what it does and what for")
 
+    
+    st.info("""
+    **How to use this tool:**
+    1. Complete the patient history form below
+    2. Click 'Submit' to make a new prediction
+    3. Review the risk assessment
+    4. Follow clinical recommendations
+    """)
+
     tab_1, tab_2, tab_3 = st.tabs(["Predictions", "Metrics", "About"])
 
     with tab_1:
         st.header("Make New Predictions", text_alignment="center")
 
         history = patient_history_form()
+        if history:
 
-        with st.container():
-            st.header("Explaining the results", text_alignment="center")
-            st.write("This section is for explaining why the model made the prediction that it did.")
-            st.write("There should be a graph or visual to appear to help explain")
-            if history:
-                risk_prediction = make_predicition(history)
-                display_prediction_results(risk_prediction)
+            with st.container():
+                st.header("Results", text_alignment="center")
+                if history:
+                    risk_prediction = make_predicition(history)
+                    display_prediction_results(risk_prediction)
+                # TODO: Add plot for shap values for prediction
+                # Show the input data in an expander
+                with st.expander("📋 View Submitted Patient Data"):
+                    st.json(history)
+        
+
+            
 
 
     with tab_2:
@@ -230,21 +233,43 @@ def main():
 
     with tab_3:
         st.header("About this App", text_alignment="center")
+
         st.markdown("""
+        ### Purpose
         
-        ### Why we built this app?
+        This test application was built to help healthcare professionals predict the risk of 
+        female patients developing Type II Diabetes (T2DM) after suffering with gestational 
+        diabetes mellitus (GDM) during pregnancy.
+        
+        ### How to Use
+        
+        1. Navigate to the **Predictions** tab
+        2. Complete the patient history form with accurate information
+        3. Click the **Submit** button to make a new prediction
+        4. Review the prediction results and risk assessment
+        5. Follow the clinical recommendations provided
+        
+        ### Model Information
+        
+        - **Model Type:** Random Forest Classifier
+        - **Input Features:** 26 clinical and demographic features
+        - **Output:** T2DM probability and binary risk classification (threshold: 0.5)
+        
+        ### Important Notes
+        
+        - This tool is designed to assist clinical decision-making, not replace it
+        - Always use clinical judgment when interpreting results
+        - Predictions should be combined with other clinical assessments
+        - Regular monitoring and follow-up remain essential
+        
+        ### Privacy & Data
+        
+        - Patient data is processed in real-time and not stored
+        - All predictions are stateless
 
-        This application was built to allow healthcare professionals to predict the risk of female patients developing type II Diabetes after suffering with gestational diabetes during pregnancy.
-        
-        ### How to use the app?
-
-        Enter the required information about the patient and click submit to make a new risk prediction.
-
-        ### What model powers these predictions?
-        
-        All predicitions are made by a random forest model. More to follow
-        
         """)
+
+
             
     
 
