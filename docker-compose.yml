@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: gd2t2d-api
+    ports:
+      - "9696:9696"
+    networks:
+      - gdm-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9696/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: gd2t2d-frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:9696
+    networks:
+      - gdm-network
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  gdm-network:
+    driver: bridge
