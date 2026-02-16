@@ -1,21 +1,22 @@
 import streamlit as st
+import requests
+import os
+
+
+# Get API URL from environment variable, fallback to localhost for development
+API_URL = os.getenv('API_URL', 'http://localhost:9696')
 
 # import requests
 
 # url = 'http://localhost:9696/predict'
 
-# response = requests.post(url, json=patient_history)
 
-# t2dm_risk_prediction = response.json()
-
-# print(t2dm_risk_prediction)
 
 # if t2dm_risk_prediction['t2dm_risk']:
 #     print('Patient at high risk of T2DM, inform primary care physician and Health Vistor.')
 # else:
 #     print('Patient at low risk of T2DM, no action required.')
 
-# TODO: Create functions to generate app components
 
 
 
@@ -36,7 +37,7 @@ def patient_history_form():
         else:
             high_pre_pregnancy_bmi_or_overweight = "no"
         family_history_of_diabetes = st.radio("Does the patient have a family history of diabetes?", ["Yes", "No"], horizontal=True).lower()
-        socioeconomic_factors_deprivation_quintile = st.selectbox("Which socioeconomic group does the patient fall into?", [1, 2, 3, 4, 5])
+        socioeconomic_factors_deprivation_quintile = st.selectbox("Which socioeconomic group does the patient fall into?", ["1", "2", "3", "4", "5"])
         presence_of_t2dm_associated_gene_variants = st.radio("Does the patient have any genes associated with type II diabetes?", ["Yes", "No"], horizontal=True).lower()
         ethnicity = st.selectbox("What is the ethnicity of your patient?", ["White", "Black", "Asian", "Mixed", "Other"])
         multiparity = st.radio("Does your patient have a history of multiparity (≥2 prior deliveries)?", ["Yes", "No"], horizontal=True).lower()
@@ -96,9 +97,109 @@ def patient_history_form():
 
             return patient_history
 
+        return None
+
+# TODO: Create function to make predictions
 
 
 
+def make_predicition(patient_history):
+
+    """
+    Send patient history to API and get prediction
+    
+    Args:
+        patient_history: Dictionary containing patient information
+        
+    Returns:
+        Dictionary with prediction results or None if error
+    """
+    try:
+        with st.spinner('🔄 Connecting to prediction service...'):
+            response = requests.post(
+                f'{API_URL}/predict',
+                json=patient_history,
+                timeout=30
+            )
+            response.raise_for_status()
+            return response.json()
+    except requests.exceptions.ConnectionError:
+        st.error(f"Cannot connect to API at {API_URL}. Please ensure the API service is running.")
+        return None
+    except requests.exceptions.Timeout:
+        st.error("Request timed out. Please try again.")
+        return None
+    except requests.exceptions.HTTPError as e:
+        st.error(f"API Error: {e.response.status_code} - {e.response.text}")
+        return None
+    except Exception as e:
+        st.error(f"Unexpected error: {str(e)}")
+        return None
+    
+
+def display_prediction_results(prediction):
+    """
+    Display the prediction results in a user-friendly format
+    
+    Args:
+        prediction: Dictionary containing t2dm_probability and t2dm_risk
+    """
+    st.success("Prediction Complete!")
+    
+    # Display metrics in columns
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        probability_pct = prediction['t2dm_probability'] * 100
+        st.metric(
+            label="Type 2 Diabetes Probability",
+            value=f"{probability_pct:.1f}%"
+        )
+    
+    with col2:
+        if prediction['t2dm_risk']:
+            st.metric(
+                label="Risk Assessment",
+                value="HIGH RISK",
+                delta="⚠️ Action Required",
+                delta_color="inverse"
+            )
+        else:
+            st.metric(
+                label="Risk Assessment",
+                value="LOW RISK",
+                delta="✓ No immediate action",
+                delta_color="normal"
+            )
+    
+    st.divider()
+    
+    # Clinical recommendations
+    st.subheader("Clinical Recommendations")
+    
+    if prediction['t2dm_risk']:
+        st.warning("""
+        **HIGH RISK PATIENT** - Please consider the following actions:
+        
+        - Inform primary care physician and Health Visitor
+        - Schedule regular glucose monitoring
+        - Recommend lifestyle modifications (diet and exercise)
+        - Consider early intervention programs
+        - Monitor for symptoms of Type 2 Diabetes
+        """)
+    else:
+        st.info("""
+        **LOW RISK PATIENT** - Standard follow-up recommended:
+        
+        - Continue routine postpartum care
+        - Annual glucose screening recommended
+        - Encourage healthy lifestyle habits
+        - Provide educational materials on diabetes prevention
+        """)
+
+
+
+# TODO: Create function to check api health
 
 
 def main():
@@ -118,7 +219,8 @@ def main():
             st.write("This section is for explaining why the model made the prediction that it did.")
             st.write("There should be a graph or visual to appear to help explain")
             if history:
-                st.write(history)
+                risk_prediction = make_predicition(history)
+                display_prediction_results(risk_prediction)
 
 
     with tab_2:
