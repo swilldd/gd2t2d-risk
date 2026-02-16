@@ -191,9 +191,12 @@ def display_prediction_results(prediction):
 
 
 def main():
-    st.title("GD2T2D Project", text_alignment="center")
+    st.title("GD2T2D Risk Prediction System", text_alignment="center")
 
-    st.write("App summary. Outline what it does and what for")
+    st.write("""A clinical decision support tool that predicts the risk of developing Type 2 Diabetes 
+in women with a history of Gestational Diabetes. This application uses 
+machine learning to analyze patient history and provide healthcare professionals with 
+evidence-based risk assessments to support early intervention and personalized care planning.""")
 
     
     st.info("""
