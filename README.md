@@ -1,6 +1,7 @@
 ![GD2T2D app image](./assets/risk-app.png)
 
 # Gestational Diabetes to Type 2 Diabetes Risk Prediction App
+[![Visit Site](https://img.shields.io/badge/Visit-Live%20Site-blue?style=for-the-badge)](https://gd2t2d-risk.onrender.com)
 ## Problem Overview
 
 This project explores predicting risk of Type 2 diabetes in women with a history of gestational diabetes. According to Dennison et al (2020), 33% of women who suffered with gestational diabetes will also develop type II diabetes within 15 years. Being able to reliably and explainably predict at risk patients allows for health services to take a proactive action. 
